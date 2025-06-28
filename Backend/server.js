@@ -19,7 +19,6 @@ app.use(cookieParser());
 
 // Api Auth Prefix down here!!
 app.use("/api/auth", authRoutes);
-app.use("/api/user", userRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
     .then(()=>app.listen(process.env.PORT, ()=>{console.log("Server Running...")}))
