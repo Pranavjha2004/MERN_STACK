@@ -1,6 +1,7 @@
 // src/context/AuthContext.jsx or inside App.jsx
 import { createContext, useEffect, useState } from "react";
 import axios from "../axios"; // your axios instance
+import { update } from './../../node_modules/tar/dist/esm/update';
 
 export const AuthContext = createContext();
 
@@ -24,6 +25,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = (userData) => {
+    setUser(userData);
+  }
 
   return (
     <AuthContext.Provider value={{ user, loading, checkAuth }}>
