@@ -5,23 +5,28 @@ import axios from "../axios"; // your axios instance
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const checkAuth = async () => {
     try {
-      const res = await axios.get("/auth/check");
-      setIsAuthenticated(res.data.authenticated);
+      const res = await axios.get("/auth/check-auth");
+      if (res.status === 200) {
+        setUser(res.data.user);
+      } else {
+        setUser(null);
+      }
     } catch {
-      setIsAuthenticated(false);
+      console.error("Authentication check failed");
+      setUser(null);
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, checkAuth }}>
+    <AuthContext.Provider value={{ user, loading, checkAuth }}>
       {children}
     </AuthContext.Provider>
   );

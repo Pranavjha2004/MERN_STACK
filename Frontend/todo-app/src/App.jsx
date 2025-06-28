@@ -3,31 +3,34 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register"; // <- add this page
-import ProtectedRoute from "./components/ProtectedRoute";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
+import { useEffect } from "react";
 
 function App() {
-  const { isAuthenticated, isRegistered } = useContext(AuthContext);
+  const { user, loading, checkAuth } = useContext(AuthContext);
 
-  if (isRegistered === false) {
-    return <Navigate to="/register" replace />;
+  // Check if user is authenticated
+  useEffect( ()=> {
+    
+    if(!user) {
+      checkAuth();
+    }
+
+  }, [checkAuth]);
+
+
+  if(loading){
+    return <div>Loading...</div>; // Show a loading state while checking auth
   }
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} /> {/* Add register route */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/" element={ !user? <Navigate to="/login" /> : <Dashboard/>} />
+        <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
+        <Route path="/register" element={user ? <Navigate to="/" /> : <Register />} />
+      
       </Routes>
     </BrowserRouter>
   );
