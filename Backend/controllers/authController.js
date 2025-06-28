@@ -43,10 +43,33 @@ export const login = async (req,res)=>{
         maxAge: 24*60*60*1000
     });
 
-    res.json({message: "Login Successful"});
+    res.json({
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email
+        },
+    });
 };
 
 export const logout = async (req,res)=>{
     res.clearCookie("token");
     res.json({message: "Logged Out!!"});
 };
+
+export const checkAuth = async (req, res) => {
+    try {
+        const {user} = req;
+        res.status(200).json({
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email
+            }
+        });
+    } catch (error) {
+        console.error("Check Auth error:", error);
+        res.status(500).json({ error: "Something went wrong" });
+        
+    }
+}

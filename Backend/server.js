@@ -21,5 +21,5 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
-    .then(()=>app.listen(process.env.PORT, ()=>{console.log("Server Running...")}))
+    .then(()=>app.listen(process.env.PORT, ()=>{console.log(`Server Running... on port ${process.env.PORT}`)}))
     .catch((err)=>console.log(err))
